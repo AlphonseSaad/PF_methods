@@ -1,0 +1,8 @@
+README.md
+pyproject.toml
+my_methods/__init__.py
+my_methods/methods.py
+my_methods.egg-info/PKG-INFO
+my_methods.egg-info/SOURCES.txt
+my_methods.egg-info/dependency_links.txt
+my_methods.egg-info/top_level.txt
