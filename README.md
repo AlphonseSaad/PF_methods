@@ -4,5 +4,7 @@ This code is part of a university project that automates the tuning process of d
 To use the helper functions, download the python package from github repo:
 
 Install:
-
 pip install git+https://github.com/AlphonseSaad/PF_methods.git
+
+upgrade:
+pip install --upgrade git+https://github.com/AlphonseSaad/PF_methods.git
