@@ -5,4 +5,4 @@ To use the helper functions, download the python package from github repo:
 
 Install:
 
-pip install git+https://github.com/AlphonseSaad/my_methods.git
+pip install git+https://github.com/AlphonseSaad/PF_methods.git
