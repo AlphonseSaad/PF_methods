@@ -47,7 +47,28 @@ def create_fault_events(app, event_type, event_name, event_time, event_target, e
     event.time = event_time
     event.p_target = event_target
     event.i_shc = (event_action) 
+
+def create_variable_selection (result_file_name, element_to_spectates, pf_variable_name):
     
+    study_case = app.GetActiveStudyCase()
+    elmres = study_case.CreateObject("ElmRes",result_file_name)
+    element = element_to_spectates
+    variable_name = pf_variable_name
+    elmres.AddVariable(element, variable_name)
+    elmres.Load()
+    return (elmres)
+
+
+def run_dynamic_simulation(pf_simulation_type, simulation_time, pf_result_file):
+
+    initial_conditions = app.GetFromStudyCase('ComInc')
+    initial_conditions.iopt_sim = pf_simulation_type
+    initial_conditions.p_resvar = pf_result_file
+    initial_conditions.Execute()
+
+    dynamic_simulation = app.GetFromStudyCase("ComSim")
+    dynamic_simulation.tstop = simulation_time
+    dynamic_simulation.Execute()
         
 
     
