@@ -69,6 +69,17 @@ def run_dynamic_simulation(pf_simulation_type, simulation_time, pf_result_file):
     dynamic_simulation = app.GetFromStudyCase("ComSim")
     dynamic_simulation.tstop = simulation_time
     dynamic_simulation.Execute()
+
+def export_simulation_results_csv(pf_result_file, file_path, file_name):
+
+    study_case = app.GetActiveStudyCase()
+    export = study_case.CreateObject("ComRes","Export_res")
+    export.pResult = pf_result_file
+    export.iopt_exp = 6
+    export.f_name = os.path.join(file_path, file_name)
+    export.iopt_sep = 1
+    export.iopt_head = 1
+    export.Execute()
         
 
     
