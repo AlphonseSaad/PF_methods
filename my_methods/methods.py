@@ -133,4 +133,97 @@ def create_plots(app, file_path, plot_groups=None, start_time=None, end_time=Non
         plt.tight_layout()
         
     plt.show()
-        
+
+# TODO clean code: elemenate copied code
+def task_automate(app, study_cases):
+
+    for study_name, study_data in study_cases.items():
+
+        create_study_case(app, study_name)
+
+        fault_3ph_events = [event for event in study_data["events"] if event["event_type"] == "EvtShc"]
+
+        if fault_3ph_events:
+            for event in study_data["events"]:
+                target_obj = app.GetCalcRelevantObjects(event["event_target_query"])[0]
+                target_elm = app.GetCalcRelevantObjects(event["variables_target_query"])[0]
+                
+                create_fault_events(
+                    app,
+                    event_type=event["event_type"],
+                    event_name=event["event_name"],
+                    event_time=event["event_time"],
+                    event_target=target_obj,
+                    event_action= event["event_action"]  
+                )
+                # TODO douple res file created.
+                res_file = create_variable_selection(
+                    app,
+                    result_file_name=event["result_file_name"],
+                    element_to_spectates=target_elm,
+                    pf_variable_names=event["plot_variables"],
+                    )
+                
+                run_dynamic_simulation(
+                app,
+                pf_simulation_type=event["simulation_type"],
+                simulation_time=event["simulation_time"],
+                pf_result_file=res_file
+                )
+
+                exported_file = export_simulation_results_csv(
+                    app,
+                    pf_result_file=res_file,
+                    file_path=event["exported_file_path"],
+                    file_name=event["exported_file_name"],
+                    )
+                
+                create_plots(
+                    app,
+                    file_path=exported_file, 
+                    plot_groups=event["plot_groups"],
+                    start_time=event["plot_start_time"],
+                    end_time=event["plot_end_time"],
+                    )
+                
+        else:
+            for event in study_data["events"]:
+                target_obj = app.GetCalcRelevantObjects(event["event_target_query"])[0]
+                target_elm = app.GetCalcRelevantObjects(event["variables_target_query"])[0]
+                create_simulation_events(
+                    app,
+                    event_type=event["event_type"],
+                    event_name=event["event_name"],
+                    event_time=event["event_time"],
+                    event_target=target_obj,
+                    event_value=event["event_value"],
+                    event_variable=event["event_variable"],
+                )
+                res_file = create_variable_selection(
+                    app,
+                    result_file_name=event["result_file_name"],
+                    element_to_spectates=target_elm,
+                    pf_variable_names=event["plot_variables"],
+                    )
+                
+                run_dynamic_simulation(
+                app,
+                pf_simulation_type=event["simulation_type"],
+                simulation_time=event["simulation_time"],
+                pf_result_file=res_file
+                )
+
+                exported_file = export_simulation_results_csv(
+                    app,
+                    pf_result_file=res_file,
+                    file_path=event["exported_file_path"],
+                    file_name=event["exported_file_name"],
+                    )
+                
+                create_plots(
+                    app,
+                    file_path=exported_file, 
+                    plot_groups=event["plot_groups"],
+                    start_time=event["plot_start_time"],
+                    end_time=event["plot_end_time"],
+                    )
