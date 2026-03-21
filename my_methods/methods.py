@@ -50,7 +50,7 @@ def create_fault_events(app, event_type, event_name, event_time, event_target, e
     event.p_target = event_target
     event.i_shc = (event_action) 
 
-def create_variable_selection (result_file_name, element_to_spectates, pf_variable_names:list):
+def create_variable_selection (app, result_file_name, element_to_spectates, pf_variable_names:list):
     study_case = app.GetActiveStudyCase()
     elmres = study_case.CreateObject("ElmRes",result_file_name)
     element = element_to_spectates
@@ -62,7 +62,7 @@ def create_variable_selection (result_file_name, element_to_spectates, pf_variab
     return (elmres)
 
 
-def run_dynamic_simulation(pf_simulation_type, simulation_time, pf_result_file):
+def run_dynamic_simulation(app, pf_simulation_type, simulation_time, pf_result_file):
 
     initial_conditions = app.GetFromStudyCase('ComInc')
     initial_conditions.iopt_sim = pf_simulation_type
@@ -73,7 +73,7 @@ def run_dynamic_simulation(pf_simulation_type, simulation_time, pf_result_file):
     dynamic_simulation.tstop = simulation_time
     dynamic_simulation.Execute()
 
-def export_simulation_results_csv(pf_result_file, file_path, file_name):
+def export_simulation_results_csv(app, pf_result_file, file_path, file_name):
 
     study_case = app.GetActiveStudyCase()
     export = study_case.CreateObject("ComRes","Export_res")
