@@ -84,6 +84,7 @@ def export_simulation_results_csv(app, pf_result_file, file_path, file_name):
     export.iopt_sep = 1
     export.iopt_head = 1
     export.Execute()
+    return (export.f_name)
 
 def create_plots(app, file_path, plot_groups=None, start_time=None, end_time=None):
     """
