@@ -84,6 +84,52 @@ def export_simulation_results_csv(app, pf_result_file, file_path, file_name):
     export.iopt_sep = 1
     export.iopt_head = 1
     export.Execute()
-        
 
+def create_plots(app, file_path, plot_groups=None, start_time=None, end_time=None):
+    """
+    Reads CSV and plots data. 
+    plot_groups: to specify how many plots are needed
+    e.x:
+    groups = [
+    ['Voltage, Magnitude in p.u.', 'Electrical Frequency in p.u.'], 
+    ['Electrical Frequency in p.u.']
+    ]
+    start_time/end_time: specify the range in seconds to plot.
+    """
+    df = pd.read_csv(file_path, skiprows=1)
+    df = df.apply(pd.to_numeric, errors='coerce')
+    df = df.dropna(how='all')
     
+    time_col = 'Time in s'
+
+    if start_time is not None:
+        df = df[df[time_col] >= start_time]
+    
+    if end_time is not None:
+        df = df[df[time_col] <= end_time]
+    
+    if df.empty:
+        print("Warning: No data found within the specified time range.")
+        return
+
+    if plot_groups is None:
+        plot_groups = [[col] for col in df.columns if col != time_col]
+
+    for group in plot_groups:
+        plt.figure(figsize=(10, 5))
+        
+        for col in group:
+            if col in df.columns:
+                plt.plot(df[time_col], df[col], label=col)
+            else:
+                print(f"Warning: Column '{col}' not found in file.")
+        
+        plt.title(f"Data Plot: {', '.join(group)}")
+        plt.xlabel('Time (s)')
+        plt.ylabel('Value (p.u.)')
+        plt.grid(True, linestyle='--', alpha=0.7)
+        plt.legend()
+        plt.tight_layout()
+        
+    plt.show()
+        
