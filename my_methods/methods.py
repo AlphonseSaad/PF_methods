@@ -2,6 +2,17 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
+def roll_back(app, version_name):
+    project = app.GetActiveProject()
+    version = None
+    for v in project.GetVersions():
+        if v.loc_name == version_name:
+            version = v
+            break
+    project.Deactivate()
+    v.Rollback()
+    project.Activate()
+
 def create_study_case(app, study_name):
     study_case_folder = app.GetProjectFolder("study")
     new_study = study_case_folder.CreateObject("IntCase", study_name)
