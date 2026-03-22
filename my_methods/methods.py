@@ -193,6 +193,7 @@ def task_automate(app, study_cases):
                 create_plots(
                     app,
                     file_path=exported_file, 
+                    study_case_name=event["study_case_name"],
                     plot_groups=event["plot_groups"],
                     start_time=event["plot_start_time"],
                     end_time=event["plot_end_time"],
@@ -234,7 +235,8 @@ def task_automate(app, study_cases):
                 
                 create_plots(
                     app,
-                    file_path=exported_file, 
+                    file_path=exported_file,
+                    study_case_name=event["study_case_name"],
                     plot_groups=event["plot_groups"],
                     start_time=event["plot_start_time"],
                     end_time=event["plot_end_time"],
