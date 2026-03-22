@@ -98,7 +98,7 @@ def export_simulation_results_csv(app, pf_result_file, file_path, file_name):
     export.Execute()
     return (export.f_name)
 
-def create_plots(app, file_path, plot_groups=None, start_time=None, end_time=None):
+def create_plots(app, file_path, study_case_name, plot_groups=None, start_time=None, end_time=None):
     """
     Reads CSV and plots data. 
     plot_groups: to specify how many plots are needed
@@ -137,7 +137,7 @@ def create_plots(app, file_path, plot_groups=None, start_time=None, end_time=Non
             else:
                 print(f"Warning: Column '{col}' not found in file.")
         
-        plt.title(f"Data Plot: {', '.join(group)}")
+        plt.title(f"{study_case_name}: {', '.join(map(str, group))}")
         plt.xlabel('Time (s)')
         plt.ylabel('Value (p.u.)')
         plt.grid(True, linestyle='--', alpha=0.7)
