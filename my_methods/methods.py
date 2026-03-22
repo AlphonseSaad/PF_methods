@@ -61,18 +61,24 @@ def create_fault_events(app, event_type, event_name, event_time, event_target, e
     event.p_target = event_target
     event.i_shc = (event_action) 
 
-def create_variable_selection (app, result_file_name, element_to_spectates:list, pf_variable_names:list):
+def create_variable_selection(app, result_file_name, study_cases: dict):
     study_case = app.GetActiveStudyCase()
-    elmres = study_case.CreateObject("ElmRes",result_file_name)
+    elmres = study_case.CreateObject("ElmRes", result_file_name)
 
-    element = element_to_spectates
-    variable_name = pf_variable_names
+    for case_name, case_data in study_cases.items():
+        for event in case_data.get("events", []):
+            variables_and_elements = event.get("variables_and_elements", {})
 
-    for variable_name in pf_variable_names:
-        elmres.AddVariable(element, variable_name)
- 
+            for element_query, pf_variable_names in variables_and_elements.items():
+                elements = app.GetCalcRelevantObjects(element_query)
+
+                element = elements[0]
+            
+                for variable_name in pf_variable_names:
+                    elmres.AddVariable(element, variable_name)
+
     elmres.Load()
-    return (elmres)
+    return elmres
 
 
 def run_dynamic_simulation(app, pf_simulation_type, simulation_time, pf_result_file):
@@ -158,7 +164,7 @@ def task_automate(app, study_cases):
         if fault_3ph_events:
             for event in study_data["events"]:
                 target_obj = app.GetCalcRelevantObjects(event["event_target_query"])[0]
-                target_elm = app.GetCalcRelevantObjects(event["variables_target_query"])[0]
+                
                 
                 create_fault_events(
                     app,
@@ -168,12 +174,11 @@ def task_automate(app, study_cases):
                     event_target=target_obj,
                     event_action= event["event_action"]  
                 )
-                # TODO douple res file created.
+                
                 res_file = create_variable_selection(
                     app,
                     result_file_name=event["result_file_name"],
-                    element_to_spectates=target_elm,
-                    pf_variable_names=event["plot_variables"],
+                    study_cases=study_cases,
                     )
                 
                 run_dynamic_simulation(
@@ -202,7 +207,7 @@ def task_automate(app, study_cases):
         else:
             for event in study_data["events"]:
                 target_obj = app.GetCalcRelevantObjects(event["event_target_query"])[0]
-                target_elm = app.GetCalcRelevantObjects(event["variables_target_query"])[0]
+               
                 create_simulation_events(
                     app,
                     event_type=event["event_type"],
@@ -215,8 +220,7 @@ def task_automate(app, study_cases):
                 res_file = create_variable_selection(
                     app,
                     result_file_name=event["result_file_name"],
-                    element_to_spectates=target_elm,
-                    pf_variable_names=event["plot_variables"],
+                    study_cases=study_cases,
                     )
                 
                 run_dynamic_simulation(
@@ -241,3 +245,4 @@ def task_automate(app, study_cases):
                     start_time=event["plot_start_time"],
                     end_time=event["plot_end_time"],
                     )
+
