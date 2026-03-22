@@ -61,7 +61,7 @@ def create_fault_events(app, event_type, event_name, event_time, event_target, e
     event.p_target = event_target
     event.i_shc = (event_action) 
 
-def create_variable_selection (app, result_file_name, element_to_spectates, pf_variable_names:list):
+def create_variable_selection (app, result_file_name, element_to_spectates:list, pf_variable_names:list):
     study_case = app.GetActiveStudyCase()
     elmres = study_case.CreateObject("ElmRes",result_file_name)
     
